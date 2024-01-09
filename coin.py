@@ -16,7 +16,7 @@ st.write('''
 # https://coinmarketcap.com
 st.sidebar.header('Menu')
 
-# 코인 이름
+# 코인 종류
 # 75259f98-8e3e-453a-813c-49b6bf24375c
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 headers = {
@@ -37,6 +37,7 @@ name = st.sidebar.selectbox('Name', coins)
 
 start_date = st.sidebar.date_input('Start date', datetime(2024, 1, 1))
 end_date = st.sidebar.date_input('End date', datetime(2024,1,7))
+period = st.sidebar.number_input('Forecast period', min_value=1, value=5, step=1)
 
 scraper = CmcScraper(name,start_date.strftime('%d-%m-%Y'), end_date.strftime('%d-%m-%Y'))
 df = scraper.get_dataframe()
@@ -51,7 +52,7 @@ fig_volume = go.Figure(data = [go.Scatter(x=df['Date'], y=df['Volume'], name = '
 df_prophet = df[['Date','Close']].rename(columns={'Date': 'ds', 'Close': 'y'})
 model = Prophet()
 model.fit(df_prophet)
-future = model.make_future_dataframe(periods=5) # set day
+future = model.make_future_dataframe(periods=period) # set day
 forecast = model.predict(future)
 fig_close.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat'], name='Predicted Close'))
 ###########################################################################################################################

@@ -1,3 +1,4 @@
+import pandas as pd
 import streamlit as st
 import yfinance as yf
 import plotly.graph_objects as go
@@ -11,7 +12,7 @@ st.write('''
 # '005930.KS'(삼성 종목 코드)의 주식 데이터
 # https://finance.yahoo.com/quote/005930.KS?p=005930.KS
 # 두산 테스나 131970.KQ
-df = yf.download('131970.KQ', start='2023-08-01', end='2024-01-07')
+df = yf.download('005930.KS', start='2023-08-01', end='2024-01-07')
 
 # 마감가격
 fig1 = go.Figure(data = [go.Scatter(x=df.index, y=df['Close'], name = 'Close Price')], 
@@ -34,4 +35,19 @@ fig1.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat'], name='Predicted 
 st.plotly_chart(fig1)
 st.plotly_chart(fig2)
 
-# Easy
+## 주식정보 받아오기
+def get_krx_stock_codes():
+    url = 'http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13'
+    df = pd.read_html(url, header=0, encoding='CP949')[0]
+    df.종목코드 = df.종목코드.map('{:06d}'.format) + '.KS'  
+    return df
+
+df = get_krx_stock_codes()
+
+stocks = list()
+for stock in df['회사명']:
+    stocks.append(stock)
+    
+name = st.sidebar.selectbox('Name', df['종목코드'][df['회사명']==stocks])
+st.write(name)
+#############################################################################
