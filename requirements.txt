@@ -1,0 +1,8 @@
+streamlit
+cryptocmd
+plotly
+numpy
+
+prophet
+# conda install libpython m2w64-toolchain -c msys2
+# pip install prophet
