@@ -17,7 +17,6 @@ st.write('''
 st.sidebar.header('Menu')
 
 # 코인 종류
-# 75259f98-8e3e-453a-813c-49b6bf24375c
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 headers = {
   'Accepts': 'application/json',
